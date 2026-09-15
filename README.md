@@ -42,6 +42,12 @@ Exit code `0` = all contracts pass; `1` = at least one FAIL. Wire it into CI or 
 
 A skill without a spec isn't wrong; it's unaudited. The linter tells you which one is which.
 
+> **Part of the Evidence-first Agents suite** — tooling that makes AI agents
+> accountable instead of just capable: [answer-contract](https://github.com/chenhz01/answer-contract)
+> (output discipline) · [skill-spec](https://github.com/chenhz01/skill-spec)
+> (spec discipline) · [memory-wiki](https://github.com/chenhz01/memory-wiki)
+> (memory discipline). Same author, same zero-dependency philosophy.
+
 ## Drafting specs at scale (v0.2.0)
 
 481 skills missing specs is not a hand-writing job. `spec_gen.py` drafts them:
