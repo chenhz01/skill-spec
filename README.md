@@ -4,7 +4,7 @@
 
 A template + linter that turns any existing `SKILL.md` folder into a **falsifiable, auditable unit**: explicit input/output contract, numbered non-skippable procedure, acceptance criteria you can actually check, guard rails, and honest limits.
 
-> [answer-contract](https://github.com/chenhz01/answer-contract) disciplines what your agent *answers*; skill-spec disciplines the *skills* it runs. Install both and the whole chain is covered.
+> [answer-contract](https://github.com/chenhz01/answer-contract) disciplines what your agent *answers*; skill-spec disciplines the *skills* it runs. Together with [skill-scorecard](https://github.com/chenhz01/skill-scorecard) (buyer-side grading), [memory-wiki](https://github.com/chenhz01/memory-wiki) (memory discipline) and [skill-os](https://github.com/chenhz01/skill-os) (the assembly line that wires all of them into one pipeline), the whole chain is covered.
 
 ## Why
 
