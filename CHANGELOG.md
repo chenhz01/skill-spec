@@ -2,6 +2,11 @@
 
 All notable changes to skill-spec. Small, regular releases.
 
+## [0.4.0] - 2026-09-16
+
+- Added `tools/spec_evidence.py`: per-run evidence black box — `gen` writes an unchecked acceptance checklist per execution, `check` exits 0 only when every item is ticked with real evidence
+- Full-cycle acceptance verified: gen (6 items) → check 0/6 UNAUDITED (exit 1) → tick → check 6/6 AUDITED (exit 0)
+
 ## [0.3.0] - 2026-09-16
 
 - Full-backlog dogfood run: 481 DRAFT specs generated in one pass (481/481 written, 0 existing specs touched); post-draft lint 482/482 pass

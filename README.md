@@ -19,6 +19,7 @@ Existing solutions audit *new* skills entering a marketplace. **skill-spec is th
 | [`SPEC_TEMPLATE.md`](SPEC_TEMPLATE.md) | Six-section contract skeleton: Purpose · Interface · Procedure · Acceptance · Guards · Honest limits |
 | [`tools/spec_lint.py`](tools/spec_lint.py) | Zero-dependency Python linter: scans skill folders, checks contract completeness and falsifiable acceptance criteria |
 | [`tools/spec_gen.py`](tools/spec_gen.py) | Draft generator: writes a six-section SPEC.md draft (DRAFT-flagged, TODO-marked) from a skill's SKILL.md — a starting point for human judgment, never a finished contract |
+| [`tools/spec_evidence.py`](tools/spec_evidence.py) | Run black box: turns a SPEC's acceptance checklist into a per-run evidence file; `check` refuses to pass until every item carries a tick
 | [`examples/`](examples/) | A fully worked, desensitized example spec |
 | [`tests/`](tests/) | Three fixtures — pass / fail / warn — the linter's own acceptance test |
 
@@ -76,6 +77,22 @@ Produced through human-AI collaboration: the template and linter were drafted by
 Before release, the linter ran against its own author's collection: **482 skills scanned, coverage 482/482** — 481 flagged for missing specs (that's the migration backlog, made visible in one command) and 1 with a complete spec. That first run caught **three real bugs** the fixtures had missed: Chinese section headers not recognized, a regex capture group truncating section bodies, and a header variant (`已知局限`) not matching. All three were fixed and promoted to regression fixtures — the pass / fail / warn / bilingual set in [`tests/`](tests/) is exactly that battle record.
 
 Then the generator ran on the full backlog: **481 DRAFT specs written in one pass** (481/481 written, 0 existing specs touched). Re-lint after drafting: **482/482 pass, 0 warnings** — every skill in the collection now has a structurally complete contract. Honest boundary: lint-green means *structurally complete*, not *human-reviewed*; every draft carries a DRAFT banner requiring review before it counts as audited. Two more real defects were found and fixed during the batch run itself (a Windows console crash on unencodable characters, and a broken-pipe exit code when output is piped).
+
+## The evidence black box (v0.4.0)
+
+A skill execution without evidence is unaudited. Before running a skill with a
+spec, generate its run file; after running, tick every acceptance item with
+real evidence — command output, file paths, N/N counts:
+
+```bash
+python tools/spec_evidence.py gen  path/to/skill/ --note "why this run"
+# ... execute the skill, gather evidence ...
+python tools/spec_evidence.py check path/to/skill/evidence/RUN-*.md
+```
+
+`check` exits 0 only when every box is ticked — wire it into CI or your agent's
+finish hook. This is a flight recorder, not a quality guarantee: a truth
+guarantee about what was actually verified.
 
 ## License
 
