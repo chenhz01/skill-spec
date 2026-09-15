@@ -51,7 +51,11 @@ A skill without a spec isn't wrong; it's unaudited. The linter tells you which o
 
 ## Authorship
 
-Produced through human-AI collaboration: the template and linter were drafted by an AI coding agent during a real internal migration — retrofitting a large legacy skill collection with specs, one at a time, starting with a production scouting skill — then reviewed, edited, and approved by a human maintainer. The linter shipped only after its own fixtures (pass / fail / warn / strict) all behaved as specified.
+Produced through human-AI collaboration: the template and linter were drafted by an AI coding agent during a real internal migration — retrofitting a legacy skill collection with specs, one at a time, starting with a production scouting skill — then reviewed, edited, and approved by a human maintainer.
+
+## Dogfooded against 482 real skills
+
+Before release, the linter ran against its own author's collection: **482 skills scanned, coverage 482/482** — 481 flagged for missing specs (that's the migration backlog, made visible in one command) and 1 with a complete spec. That first run caught **three real bugs** the fixtures had missed: Chinese section headers not recognized, a regex capture group truncating section bodies, and a header variant (`已知局限`) not matching. All three were fixed and promoted to regression fixtures — the pass / fail / warn / bilingual set in [`tests/`](tests/) is exactly that battle record.
 
 ## License
 

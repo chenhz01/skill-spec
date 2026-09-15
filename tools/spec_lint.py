@@ -20,12 +20,12 @@ import sys
 from pathlib import Path
 
 REQUIRED_SECTIONS = [
-    ("purpose", r"^##\s*1\.?\s*purpose\b"),
-    ("interface", r"^##\s*2\.?\s*interface\b"),
-    ("procedure", r"^##\s*3\.?\s*procedure\b"),
-    ("acceptance", r"^##\s*4\.?\s*acceptance\b"),
-    ("guards", r"^##\s*5\.?\s*guards\b"),
-    ("honest limits", r"^##\s*6\.?\s*honest\s+limits\b"),
+    ("purpose", [r"^##\s*1\.?\s*purpose\b", r"^##\s*1\.?\s*目的"]),
+    ("interface", [r"^##\s*2\.?\s*interface\b", r"^##\s*2\.?\s*(?:输入|接口)"]),
+    ("procedure", [r"^##\s*3\.?\s*procedure\b", r"^##\s*3\.?\s*(?:流程|步骤)"]),
+    ("acceptance", [r"^##\s*4\.?\s*acceptance\b", r"^##\s*4\.?\s*验收"]),
+    ("guards", [r"^##\s*5\.?\s*guards\b", r"^##\s*5\.?\s*(?:护栏|红线)"]),
+    ("honest limits", [r"^##\s*6\.?\s*honest\s+limits\b", r"^##\s*6\.?\s*[^\n:：]*局限", r"^##\s*6\.?\s*诚实"]),
 ]
 
 # Vague phrasing that must NOT appear in the Acceptance section
@@ -57,6 +57,16 @@ def has_frontmatter(skill_md: str) -> tuple[bool, list[str]]:
     return not missing, missing
 
 
+def find_section(spec: str, patterns: list[str]):
+    """Return the first matching section match object (header + body), or None."""
+    for p in patterns:
+        m = re.search(rf"{p}(.*?)(?=^##\s|\Z)", spec,
+                      re.IGNORECASE | re.MULTILINE | re.DOTALL)
+        if m:
+            return m
+    return None
+
+
 def lint_skill(skill_dir: Path) -> list[tuple[str, str, str]]:
     """Lint one skill directory. Returns list of (level, check, detail)."""
     results: list[tuple[str, str, str]] = []
@@ -79,15 +89,14 @@ def lint_skill(skill_dir: Path) -> list[tuple[str, str, str]]:
         return results
     spec = spec_md_path.read_text(encoding="utf-8", errors="ignore")
 
-    # 3. Six required sections
-    for name, pattern in REQUIRED_SECTIONS:
-        found = re.search(pattern, spec, re.IGNORECASE | re.MULTILINE)
+    # 3. Six required sections (English or Chinese headers)
+    for name, patterns in REQUIRED_SECTIONS:
+        found = any(re.search(p, spec, re.IGNORECASE | re.MULTILINE) for p in patterns)
         results.append(("PASS" if found else "FAIL", f"section: {name}",
                         "present" if found else "absent"))
 
     # 4. Falsifiable acceptance criteria
-    acc = re.search(r"^##\s*4\.?\s*acceptance\b(.*?)(?=^##\s|\Z)", spec,
-                    re.IGNORECASE | re.MULTILINE | re.DOTALL)
+    acc = find_section(spec, dict(REQUIRED_SECTIONS)["acceptance"])
     if acc:
         body = acc.group(1)
         if any(re.search(p, body, re.IGNORECASE) for p in VAGUE_PATTERNS):
@@ -102,8 +111,7 @@ def lint_skill(skill_dir: Path) -> list[tuple[str, str, str]]:
     # covered by section check if absent
 
     # 5. Honest limits non-empty
-    hl = re.search(r"^##\s*6\.?\s*honest\s+limits\b(.*?)(?=^##\s|\Z)", spec,
-                   re.IGNORECASE | re.MULTILINE | re.DOTALL)
+    hl = find_section(spec, dict(REQUIRED_SECTIONS)["honest limits"])
     if hl:
         body = hl.group(1).strip()
         results.append(("PASS" if len(body) > 40 else "WARN", "honest limits non-empty",
