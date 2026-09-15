@@ -18,6 +18,7 @@ Existing solutions audit *new* skills entering a marketplace. **skill-spec is th
 |---|---|
 | [`SPEC_TEMPLATE.md`](SPEC_TEMPLATE.md) | Six-section contract skeleton: Purpose · Interface · Procedure · Acceptance · Guards · Honest limits |
 | [`tools/spec_lint.py`](tools/spec_lint.py) | Zero-dependency Python linter: scans skill folders, checks contract completeness and falsifiable acceptance criteria |
+| [`tools/spec_gen.py`](tools/spec_gen.py) | Draft generator: writes a six-section SPEC.md draft (DRAFT-flagged, TODO-marked) from a skill's SKILL.md — a starting point for human judgment, never a finished contract |
 | [`examples/`](examples/) | A fully worked, desensitized example spec |
 | [`tests/`](tests/) | Three fixtures — pass / fail / warn — the linter's own acceptance test |
 
@@ -40,6 +41,17 @@ Exit code `0` = all contracts pass; `1` = at least one FAIL. Wire it into CI or 
 3. Run the linter. Fix every ❌. Ship when it's green — then re-run it whenever the skill changes.
 
 A skill without a spec isn't wrong; it's unaudited. The linter tells you which one is which.
+
+## Drafting specs at scale (v0.2.0)
+
+481 skills missing specs is not a hand-writing job. `spec_gen.py` drafts them:
+
+```bash
+python skill-spec/tools/spec_gen.py path/to/skills/ --dry-run   # see the backlog, write nothing
+python skill-spec/tools/spec_gen.py path/to/one-skill/          # write a DRAFT SPEC.md next to SKILL.md
+```
+
+Every draft is flagged `DRAFT` with TODO markers and never overwrites an existing SPEC.md. The draft fills in what can be inferred (name, description, structure hints); the human fills in what must be judged — acceptance criteria, red lines, honest limits. Draft → review → `spec_lint` green, in that order.
 
 ## The five checks
 
