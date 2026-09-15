@@ -19,7 +19,7 @@ Existing solutions audit *new* skills entering a marketplace. **skill-spec is th
 | [`SPEC_TEMPLATE.md`](SPEC_TEMPLATE.md) | Six-section contract skeleton: Purpose · Interface · Procedure · Acceptance · Guards · Honest limits |
 | [`tools/spec_lint.py`](tools/spec_lint.py) | Zero-dependency Python linter: scans skill folders, checks contract completeness and falsifiable acceptance criteria |
 | [`examples/`](examples/) | A fully worked, desensitized example spec |
-| [`tests/`](tests/) | A passing fixture and a failing fixture (the linter's own acceptance test) |
+| [`tests/`](tests/) | Three fixtures — pass / fail / warn — the linter's own acceptance test |
 
 ## Install (60 seconds)
 
@@ -32,6 +32,14 @@ python skill-spec/tools/spec_lint.py path/to/one-skill/      # scan one skill
 ```
 
 Exit code `0` = all contracts pass; `1` = at least one FAIL. Wire it into CI or a pre-commit hook.
+
+## Add a spec to an existing skill (three steps)
+
+1. Copy [`SPEC_TEMPLATE.md`](SPEC_TEMPLATE.md) next to the skill's `SKILL.md`, rename it `SPEC.md`.
+2. Fill the six sections — the two that take real thought are **Acceptance** (every claim must be answerable with yes/no or a number) and **Honest limits** (what it can't do, stated plainly).
+3. Run the linter. Fix every ❌. Ship when it's green — then re-run it whenever the skill changes.
+
+A skill without a spec isn't wrong; it's unaudited. The linter tells you which one is which.
 
 ## The five checks
 
