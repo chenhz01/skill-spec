@@ -69,6 +69,8 @@ Produced through human-AI collaboration: the template and linter were drafted by
 
 Before release, the linter ran against its own author's collection: **482 skills scanned, coverage 482/482** — 481 flagged for missing specs (that's the migration backlog, made visible in one command) and 1 with a complete spec. That first run caught **three real bugs** the fixtures had missed: Chinese section headers not recognized, a regex capture group truncating section bodies, and a header variant (`已知局限`) not matching. All three were fixed and promoted to regression fixtures — the pass / fail / warn / bilingual set in [`tests/`](tests/) is exactly that battle record.
 
+Then the generator ran on the full backlog: **481 DRAFT specs written in one pass** (481/481 written, 0 existing specs touched). Re-lint after drafting: **482/482 pass, 0 warnings** — every skill in the collection now has a structurally complete contract. Honest boundary: lint-green means *structurally complete*, not *human-reviewed*; every draft carries a DRAFT banner requiring review before it counts as audited. Two more real defects were found and fixed during the batch run itself (a Windows console crash on unencodable characters, and a broken-pipe exit code when output is piped).
+
 ## License
 
 MIT — use it, fork it, wire it into your CI. Attribution appreciated, not required.

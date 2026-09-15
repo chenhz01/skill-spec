@@ -109,10 +109,15 @@ Detected SKILL.md structure (hints for filling this in):
 
 def sanitize(text: str) -> str:
     """Strip control characters that crash Windows console writes."""
-    return re.sub(r"[\x00-\x08\x0b\x0c\x0e-\x1f]", "", text)
+    return re.sub(r"[\x00-\x08\x0b\x0c\x0e-\x1f\x7f\u2028\u2029\ufeff]", "", text)
 
 
 def main() -> int:
+    # Windows console / pipe writes can raise OSError 22 on unencodable
+    # characters; replace instead of crash.
+    if hasattr(sys.stdout, "reconfigure"):
+        sys.stdout.reconfigure(errors="replace")
+        sys.stderr.reconfigure(errors="replace")
     ap = argparse.ArgumentParser(description="draft SPEC.md files for skills lacking one")
     ap.add_argument("path", type=Path, help="a skill directory or a collection directory")
     ap.add_argument("--out", type=Path, help="write drafts here instead of next to each SKILL.md (safe preview)")
