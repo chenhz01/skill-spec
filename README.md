@@ -1,3 +1,9 @@
+> [!IMPORTANT]
+> **此仓已并入 [`skill-os`](https://github.com/chenhz01/skill-os)**（SPEC/Prompt-as-Source 并入旗舰）
+> 本仓转为只读归档，issue 与 star 请移步旗舰仓。
+
+---
+
 # skill-spec
 
 **The spec-discipline layer for AI agent skills.** Your agent has skills. Do they have contracts?
